@@ -14,8 +14,12 @@ public class GameState {
 
     }
 
-    public void setInventory(int itemNum, boolean have) {
-        inventory[itemNum] = have;
+    public void giveItem(int itemNum) {
+        inventory[itemNum] = true;
+    }
+
+    public void removeItem(int itemNum) {
+        inventory[itemNum] = false;
     }
 
     public void changeVar(String statement) {

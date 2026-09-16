@@ -40,6 +40,8 @@ public class Scene {
             if(commandNum < textArray.size() - 1) { textString += "\n"; }
         }
 
+        textString += "\n";
+
         return textString;
     }
 

@@ -31,16 +31,18 @@ public class Scene {
     }
 
     public String makeOptions() {
-        JsonArray textArray = scene.getAsJsonArray("options");
-        JsonArray optionResults = scene.getAsJsonArray("labels");
         String textString = "";
-        for(commandNum = 0; commandNum < textArray.size(); commandNum++) {
-            textString += (commandNum + 1) + ". " + textArray.get(commandNum).getAsString();
-            labels.add(optionResults.get(commandNum).getAsString());
-            if(commandNum < textArray.size() - 1) { textString += "\n"; }
-        }
+        if(scene.has("options")) {
+            JsonArray textArray = scene.getAsJsonArray("options");
+            JsonArray optionResults = scene.getAsJsonArray("labels");
+            for(commandNum = 0; commandNum < textArray.size(); commandNum++) {
+                textString += (commandNum + 1) + ". " + textArray.get(commandNum).getAsString();
+                labels.add(optionResults.get(commandNum).getAsString());
+                if(commandNum < textArray.size() - 1) { textString += "\n"; }
+            }
 
-        textString += "\n";
+            textString += "\n";
+        }
 
         return textString;
     }

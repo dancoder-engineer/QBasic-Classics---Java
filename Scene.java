@@ -52,23 +52,26 @@ public class Scene {
         gameStates[0].setLabel(sceneName);
 
         if(scene.has("Junction")) {
-            //"Junction": [["I0 Owned", "gloveCompartmentEmpty", "takeGum"]]
-            JsonArray junction = scene.getAsJsonArray("Junction").get(0).getAsJsonArray();
-            String nextScene = gameStates[0].ifCondition(junction.get(0).getAsString()) ?
-                junction.get(1).getAsString():
-                junction.get(2).getAsString();
-            changeScene(nextScene);
+            String nextScene = "";
+            for(int i = 0; i < scene.getAsJsonArray("Junction").size(); i++){
+                JsonArray junction = scene.getAsJsonArray("Junction").get(i).getAsJsonArray();
+                if (gameStates[0].ifCondition(junction.get(0).getAsString())) {
+                    nextScene = junction.get(1).getAsString();
+                } else if (junction.size() > 2) {
+                    nextScene = junction.get(2).getAsString();
+                }
+                if (!nextScene.equals("")) {
+                    changeScene(nextScene); 
+                    return;
+                }
+            }
 
         } else {
             commandNum = 0;
             outputText = "";
-
             outputText += makeText() + "\n" + makeOptions();
             processCommands();
         }
-        
-
-
     }
 
     public String processChoice(int choice) {
@@ -102,7 +105,10 @@ public class Scene {
                 gameStates[1].updateCheckpoint(gameStates[0]);
                 break;
             case "Game Over":
-                //
+                outputText = "1. Return to Checkpoint";
+                labels.clear();
+                labels.add(gameStates[1].getLabel());
+                gameStates[0].updateCheckpoint(gameStates[1]);
                 break;
             case "Variable Math":
                 gameStates[0].variableMath(cmdArray.get(1).getAsString());
@@ -120,6 +126,7 @@ public class Scene {
                     commandNum++;
                 }
                 break;
+
             
         }
     }

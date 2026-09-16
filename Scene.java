@@ -20,6 +20,7 @@ public class Scene {
     }
 
     public String makeText () {
+        if(!scene.has("text")) { return ""; }
         JsonArray textArray = scene.getAsJsonArray("text");
         String textString = "";
         for(int i = 0; i < textArray.size(); i++) {
@@ -48,11 +49,21 @@ public class Scene {
         scene = gameData.getAsJsonObject(sceneName);
         gameStates[0].setLabel(sceneName);
 
-        commandNum = 0;
-        outputText = "";
+        if(scene.has("Junction")) {
+            //"Junction": [["I0 Owned", "gloveCompartmentEmpty", "takeGum"]]
+            JsonArray junction = scene.getAsJsonArray("Junction").get(0).getAsJsonArray();
+            String nextScene = gameStates[0].ifCondition(junction.get(0).getAsString()) ?
+                junction.get(1).getAsString():
+                junction.get(2).getAsString();
+            changeScene(nextScene);
 
-        outputText += makeText() + "\n" + makeOptions();
-        processCommands();
+        } else {
+            commandNum = 0;
+            outputText = "";
+
+            outputText += makeText() + "\n" + makeOptions();
+            processCommands();
+        }
         
 
 

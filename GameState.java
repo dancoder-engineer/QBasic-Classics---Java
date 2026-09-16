@@ -63,17 +63,22 @@ public class GameState {
     public boolean ifCondition(String condition) {
         String[] parts = condition.split(" ");
         int varNum = Integer.parseInt(parts[0].substring(1));
-        String operation = parts[1];
-        int numOperator = Integer.parseInt(parts[2]);switch (operation) {
-            case "=":
-                return vars[varNum] == numOperator;
-            case "<":
-                return vars[varNum] < numOperator;
-            case ">":
-                return vars[varNum] > numOperator;
-            default:
-                return true;
+        if(condition.charAt(0) == 'V') {
+            String operation = parts[1];
+            int numOperator = Integer.parseInt(parts[2]);switch (operation) {
+                case "=":
+                    return vars[varNum] == numOperator;
+                case "<":
+                    return vars[varNum] < numOperator;
+                case ">":
+                    return vars[varNum] > numOperator;
+                default:
+                    return true;
+            }
+        } else {
+            return inventory[varNum];
         }
+
 
 
     }

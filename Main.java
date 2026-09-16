@@ -10,45 +10,44 @@ public class Main {
 public static void main(String[] args) throws IOException {
     //PattysCakes.test();
 
-    // FileReader gameFile = new FileReader(".\\gameData.json");
-    // JsonObject fullData = JsonParser.parseReader(gameFile).getAsJsonObject();
-    // JsonObject metaData = fullData.getAsJsonObject("metadata");
-    // JsonObject gameData = fullData.getAsJsonObject("mainData");
-    // GameState[] gameStates = new GameState[2]; //[0] is current [1] is at checkpoint
-    // String gameTitle = metaData.get("title").getAsString();
+    FileReader gameFile = new FileReader(".\\gameData.json");
+    JsonObject fullData = JsonParser.parseReader(gameFile).getAsJsonObject();
+   // JsonObject metaData = fullData.getAsJsonObject("metadata");
+    JsonObject gameData = fullData.getAsJsonObject("mainData");
+    GameState[] gameStates = new GameState[2]; //[0] is current [1] is at checkpoint
+    gameStates[0] = new GameState();
+    gameStates[1] = new GameState();
+    //String gameTitle = metaData.get("title").getAsString();
 
-    // Scanner in = new Scanner(System.in);
+    Scanner in = new Scanner(System.in);
     
     
-    // Scene scene = new Scene (gameData, gameStates);
-    // scene.changeScene("Intro");
+    Scene scene = new Scene (gameData, gameStates);
+    scene.changeScene("titleScreen");
 
 
-    // int num = 0;
+    int num = 0;
 
-    // while(num >= 0) {
+    String display = scene.processChoice(1);
 
-    //     String display = "";
+    while(num >= 0) {
+         
 
-    //     // display += scene.makeText();
-    //     // display += "\n\n";
-    //     // display += scene.makeOptions();
-    //     System.out.println(display);
-    //     num = in.nextInt();
-    //     scene.processChoice(num);
-
-    // }
-
-    // in.close();
+        
 
 
-    String varOper = "v4 = 2";
-    changeVar(varOper);
+        System.out.println(display);
+        num = in.nextInt();
+        display = scene.processChoice(num);
+
+    }
+
+    in.close();
 
 
 
 
-   // gameFile.close();
+   gameFile.close();
 }
 
 

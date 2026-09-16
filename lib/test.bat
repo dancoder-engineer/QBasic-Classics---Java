@@ -1,0 +1,1 @@
+jar tf lib\gson-2.14.0.jar | findstr "JsonObject.class"

@@ -1,3 +1,5 @@
+import com.google.gson.JsonArray;
+
 public class GameState {
 
     private String label = "titleScreen";
@@ -5,9 +7,26 @@ public class GameState {
     private int[] vars = new int[50];
     private String music = "";
     private String image = "";
+    private JsonArray inventoryNames;
 
-    public GameState() {
+    public GameState(JsonArray inventory) {
+        this.inventoryNames = inventory;
+    }
 
+    public String inventoryString() {
+        String invString = "";
+        boolean entered = false;
+
+        for (int i = 0; i < inventoryNames.size(); i++) {
+            if(inventory[i]) {
+                String addTo = (entered) ? ", " : "Inventory: ";
+                addTo += inventoryNames.get(i).getAsString();
+                invString += addTo;
+                entered = true;
+            }
+        }
+        if(invString.isEmpty()) { return "Inventory is empty."; }
+        return invString;
     }
 
     public String getImage() {

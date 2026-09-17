@@ -1,3 +1,4 @@
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -13,9 +14,10 @@ public static void main(String[] args) throws IOException {
     JsonObject fullData = JsonParser.parseReader(gameFile).getAsJsonObject();
    // JsonObject metaData = fullData.getAsJsonObject("metadata");
     JsonObject gameData = fullData.getAsJsonObject("mainData");
+    JsonArray inventory = fullData.getAsJsonObject("mainData").getAsJsonArray("inventory");
     GameState[] gameStates = new GameState[2]; //[0] is current [1] is at checkpoint
-    gameStates[0] = new GameState();
-    gameStates[1] = new GameState();
+    gameStates[0] = new GameState(inventory);
+    gameStates[1] = new GameState(inventory);
     //String gameTitle = metaData.get("title").getAsString();
 
     Scanner in = new Scanner(System.in);
@@ -32,14 +34,14 @@ public static void main(String[] args) throws IOException {
 
 
     while(num >= 0) {
-         
-
-        
-
 
         System.out.println(display);
         num = in.nextInt();
-        display = scene.processChoice(num);
+
+        if (num == 99) { System.out.println(gameStates[0].inventoryString()); }
+        else {
+            display = scene.processChoice(num);
+        }
 
     }
 

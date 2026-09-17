@@ -11,15 +11,23 @@ public class Scene {
     private int commandNum; //keeps track of what displayed option corresponds to what number on screen for adding with commands
     private GameState[] gameStates;
     private String outputText;
+    private AudioPlayer music = new AudioPlayer(true);
+    private AudioPlayer sfx = new AudioPlayer(false);
 
     public Scene (JsonObject dataObject, GameState[] gStates) {
         gameData = dataObject;
-        scene = gameData.getAsJsonObject("titleScreen");
+      //  scene = gameData.getAsJsonObject("titleScreen");
         gameStates = gStates;
+
+        changeScene("titleScreen");
 
     }
 
-    public String makeText () {
+    public String makeInitialText() {
+        return makeText() + "\n" + makeOptions();
+    }
+
+    private String makeText() {
         if(!scene.has("text")) { return ""; }
         JsonArray textArray = scene.getAsJsonArray("text");
         String textString = "";
@@ -30,7 +38,7 @@ public class Scene {
         return textString;
     }
 
-    public String makeOptions() {
+    private String makeOptions() {
         String textString = "";
         if(scene.has("options")) {
             JsonArray textArray = scene.getAsJsonArray("options");
@@ -48,7 +56,7 @@ public class Scene {
     }
 
 
-    public void changeScene(String sceneName) {
+    private void changeScene(String sceneName) {
         labels.clear();
         scene = gameData.getAsJsonObject(sceneName);
         gameStates[0].setLabel(sceneName);
@@ -92,7 +100,7 @@ public class Scene {
     }
 
 
-    public void processCommands() {
+    private void processCommands() {
 
         if(scene.has("commands")) {
             for (JsonElement command : scene.getAsJsonArray("commands")){
@@ -104,7 +112,7 @@ public class Scene {
     
 
 
-    public void processCommand(JsonArray cmdArray) {
+    private void processCommand(JsonArray cmdArray) {
 
         String cmdName = cmdArray.get(0).getAsString();
 
@@ -134,6 +142,26 @@ public class Scene {
                     commandNum++;
                 }
                 break;
+            case "Play Music": 
+                String song = cmdArray.get(1).getAsString();
+                if (!gameStates[0].getMusic().equals(song)) {
+                    gameStates[0].setMusic(song);
+                    music.play(song);
+                }
+                break;
+            case "Stop Music":
+                if(!gameStates[0].getMusic().isEmpty()) {
+                    gameStates[0].setMusic("");
+                    music.stop();
+                }
+                break;
+            case "Play SFX":
+                String effect = cmdArray.get(1).getAsString();
+                sfx.play(effect);
+                break;
+
+
+            
 
             
         }
@@ -143,25 +171,4 @@ public class Scene {
 
 
 
-
-
-
-
-
-//     "Play Music": (commands) => { 
-//         if (currentState.music != commands[1]) {
-//             currentState.music = commands[1]
-//             music.src = "./sound/" + commands[1]
-//             music.play()
-//         }
-//     },
-
-//     "Stop Music": () => { 
-//         music.pause()
-//     },
-
-//     "Play SFX": (commands) => { 
-//             sfx.src = "./sound/" + commands[1]
-//             sfx.play()
-//     },
 

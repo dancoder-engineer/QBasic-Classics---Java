@@ -1,13 +1,29 @@
 public class GameState {
 
-    String label = "";
-    boolean[] inventory = new boolean[50];
-    int[] vars = new int[50];
-    String music = "";
-    String image = "";
+    private String label = "titleScreen";
+    private boolean[] inventory = new boolean[50];
+    private int[] vars = new int[50];
+    private String music = "";
+    private String image = "";
 
     public GameState() {
 
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setimage(String image){
+        this.music = image;
+    }
+
+    public String getMusic() {
+        return music;
+    }
+
+    public void setMusic(String music){
+        this.music = music;
     }
 
     public String getLabel() {
@@ -22,12 +38,20 @@ public class GameState {
         image = newImg;
     }
 
+    public int[] getVars() {
+        return vars;
+    }
+
+    public boolean[] getInventory() {
+        return inventory;
+    }
+
     public void updateCheckpoint(GameState copyFrom) {
-        label = copyFrom.label;
-        inventory = copyFrom.inventory.clone();
-        vars = copyFrom.vars.clone();
-        music = copyFrom.music;
-        image = copyFrom.image;
+        label = copyFrom.getLabel();
+        inventory = copyFrom.getInventory().clone();
+        vars = copyFrom.getVars().clone();
+        music = copyFrom.getMusic();
+        image = copyFrom.getImage();
     }
 
     public void giveItem(int itemNum) {
@@ -48,7 +72,6 @@ public class GameState {
         switch (operation) {
             case "=":
                 vars[varNum] = numOperator;
-                System.out.println(varNum + " -- " + vars[varNum]);
                 break;
             case "+":
                 vars[varNum] += numOperator;

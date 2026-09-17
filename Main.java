@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Main {
 public static void main(String[] args) throws IOException {
-    //PattysCakes.test();
 
     FileReader gameFile = new FileReader(".\\gameData.json");
     JsonObject fullData = JsonParser.parseReader(gameFile).getAsJsonObject();
@@ -23,22 +22,12 @@ public static void main(String[] args) throws IOException {
     
     
     Scene scene = new Scene (gameData, gameStates);
-    scene.changeScene("titleScreen");
 
 
     int num = 0;
 
-    String display = scene.processChoice(1);
+    String display = scene.makeInitialText();
 
-    AudioPlayer music = new AudioPlayer(true);
-    AudioPlayer sfx = new AudioPlayer(false);
-
-    music.play("music1.wav");
-    sfx.play("burp.wav");
-
-    String x = in.next();
-
-    music.stop();
 
 
 
@@ -48,9 +37,9 @@ public static void main(String[] args) throws IOException {
         
 
 
-        // System.out.println(display);
-        // num = in.nextInt();
-        // display = scene.processChoice(num);
+        System.out.println(display);
+        num = in.nextInt();
+        display = scene.processChoice(num);
 
     }
 
@@ -65,7 +54,7 @@ public static void main(String[] args) throws IOException {
 
 
 
-    static void changeVar(String statement) {//int varNum, String operation, int numOperator) {
+    static void changeVar(String statement) {
         String[] parts = statement.split(" ");
         int varNum = Integer.parseInt(parts[0].substring(1));
         String operation = parts[1];

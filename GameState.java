@@ -34,7 +34,7 @@ public class GameState {
     }
 
     public void setimage(String image){
-        this.music = image;
+        this.image = image;
     }
 
     public String getMusic() {

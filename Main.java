@@ -30,15 +30,27 @@ public static void main(String[] args) throws IOException {
 
     String display = scene.processChoice(1);
 
+    AudioPlayer music = new AudioPlayer(true);
+    AudioPlayer sfx = new AudioPlayer(false);
+
+    music.play("music1.wav");
+    sfx.play("burp.wav");
+
+    String x = in.next();
+
+    music.stop();
+
+
+
     while(num >= 0) {
          
 
         
 
 
-        System.out.println(display);
-        num = in.nextInt();
-        display = scene.processChoice(num);
+        // System.out.println(display);
+        // num = in.nextInt();
+        // display = scene.processChoice(num);
 
     }
 

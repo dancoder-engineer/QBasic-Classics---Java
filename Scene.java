@@ -53,6 +53,12 @@ public class Scene {
         scene = gameData.getAsJsonObject(sceneName);
         gameStates[0].setLabel(sceneName);
 
+        if (scene.has("Image")) {
+            String imgName = scene.get("Image").getAsString();
+            gameStates[0].setImage(imgName);
+            //TODO logic to show image when on a platform that supports it 
+        }
+
         if(scene.has("Junction")) {
             String nextScene = "";
             for(int i = 0; i < scene.getAsJsonArray("Junction").size(); i++){
@@ -140,11 +146,6 @@ public class Scene {
 
 
 
-//     "Game Over": () => { 
-//         currentButtons = ["Return to Checkpoint"]
-//         currentLabels = [checkpointState.label]
-//         currentState = {...checkpointState}
-//     },
 
 
 //     "Play Music": (commands) => { 

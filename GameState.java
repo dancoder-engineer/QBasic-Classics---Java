@@ -18,6 +18,10 @@ public class GameState {
         label = newLabel;
     }
 
+    public void setImage(String newImg) {
+        image = newImg;
+    }
+
     public void updateCheckpoint(GameState copyFrom) {
         label = copyFrom.label;
         inventory = copyFrom.inventory.clone();
@@ -82,9 +86,6 @@ public class GameState {
         } else {
             return (operation.equals("Owned")) ? inventory[varNum] : !inventory[varNum];
         }
-
-
-
     }
 
 

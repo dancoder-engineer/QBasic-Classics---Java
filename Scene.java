@@ -14,6 +14,10 @@ public class Scene {
     private AudioPlayer music = new AudioPlayer(true);
     private AudioPlayer sfx = new AudioPlayer(false);
 
+    public Scene() {
+
+    }
+
     public Scene (JsonObject dataObject, GameState[] gStates) {
         gameData = dataObject;
       //  scene = gameData.getAsJsonObject("titleScreen");
@@ -23,9 +27,6 @@ public class Scene {
 
     }
 
-    public String makeInitialText() {
-        return makeText() + "\n" + makeOptions();
-    }
 
     private String makeText() {
         if(!scene.has("text")) { return ""; }
@@ -53,6 +54,16 @@ public class Scene {
         }
 
         return textString;
+    }
+
+    public String setScene(String sceneName) {
+        scene = gameData.getAsJsonObject(sceneName);
+        labels.clear();
+        commandNum = 0;
+        outputText = "";
+        outputText += makeText() + "\n" + makeOptions();
+        processCommands(true);
+        return outputText;
     }
 
 
@@ -86,7 +97,7 @@ public class Scene {
             commandNum = 0;
             outputText = "";
             outputText += makeText() + "\n" + makeOptions();
-            processCommands();
+            processCommands(true);
         }
     }
 
@@ -100,11 +111,11 @@ public class Scene {
     }
 
 
-    private void processCommands() {
+    private void processCommands(boolean doMath) {
 
         if(scene.has("commands")) {
             for (JsonElement command : scene.getAsJsonArray("commands")){
-                processCommand(command.getAsJsonArray());
+                processCommand(command.getAsJsonArray(), doMath);
             }
         }
 
@@ -112,7 +123,7 @@ public class Scene {
     
 
 
-    private void processCommand(JsonArray cmdArray) {
+    private void processCommand(JsonArray cmdArray, boolean doMath) {
 
         String cmdName = cmdArray.get(0).getAsString();
 
@@ -127,14 +138,20 @@ public class Scene {
                 gameStates[0].updateCheckpoint(gameStates[1]);
                 break;
             case "Variable Math":
-                gameStates[0].variableMath(cmdArray.get(1).getAsString());
-                break;
+                if (doMath) {
+                    gameStates[0].variableMath(cmdArray.get(1).getAsString());
+                    break;
+                }
             case "Give Item":
-                gameStates[0].giveItem(cmdArray.get(1).getAsInt());
-                break;
+                if (doMath) {
+                    gameStates[0].giveItem(cmdArray.get(1).getAsInt());
+                    break;
+                }
             case "Remove Item":
-                gameStates[0].removeItem(cmdArray.get(1).getAsInt());
-                break;
+                if (doMath) {
+                    gameStates[0].removeItem(cmdArray.get(1).getAsInt());
+                    break;
+                }
             case "Add Label If": 
                 if(gameStates[0].ifCondition(cmdArray.get(1).getAsString())) { 
                     outputText += (commandNum + 1) + ". " + cmdArray.get(2).getAsString() + "\n";

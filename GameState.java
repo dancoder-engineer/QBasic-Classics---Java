@@ -1,4 +1,5 @@
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class GameState {
 
@@ -128,6 +129,44 @@ public class GameState {
         } else {
             return (operation.equals("Owned")) ? inventory[varNum] : !inventory[varNum];
         }
+    }
+
+    public JsonObject dataToJson() {
+        JsonArray jsVars = new JsonArray();
+        JsonArray jsInventory = new JsonArray();
+        JsonObject stateJSON = new JsonObject();
+
+        stateJSON.addProperty("label", label);
+        stateJSON.addProperty("image", image);
+        stateJSON.addProperty("music", music);
+        
+        for (int var : vars) { jsVars.add(var); }
+        for (boolean invItem : inventory) { jsInventory.add(invItem); }
+
+        stateJSON.add("variables", jsVars);
+        stateJSON.add("inventory", jsInventory);
+
+
+    // private String label = "titleScreen";
+    // private boolean[] inventory = new boolean[50];
+    // private int[] vars = new int[50];
+    // private String music = "";
+    // private String image = "";
+
+        return stateJSON;
+
+    }
+
+    public void restoreState(JsonObject loadedState) {
+        JsonArray jsonVars = loadedState.get("variables").getAsJsonArray();
+        JsonArray jsonInventory = loadedState.get("inventory").getAsJsonArray();
+        
+        label = loadedState.get("label").getAsString();
+        image = loadedState.get("image").getAsString();
+        music = loadedState.get("music").getAsString();
+
+        for(int i = 0; i < jsonVars.size(); i++) { vars[i] = jsonVars.get(i).getAsInt(); }
+        for(int i = 0; i < jsonInventory.size(); i++) { inventory[i] = jsonInventory.get(i).getAsBoolean(); }
     }
 
 

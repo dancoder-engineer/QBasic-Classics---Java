@@ -2,12 +2,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
 
 import java.util.Scanner;
 
 public class Main {
+    static GameState[] gameStates = new GameState[2]; //[0] is current [1] is at checkpoint
+    static Scene scene = new Scene();
+    static String display = "";
+
 public static void main(String[] args) throws IOException {
 
     FileReader gameFile = new FileReader(".\\gameData.json");
@@ -15,20 +23,21 @@ public static void main(String[] args) throws IOException {
    // JsonObject metaData = fullData.getAsJsonObject("metadata");
     JsonObject gameData = fullData.getAsJsonObject("mainData");
     JsonArray inventory = fullData.getAsJsonObject("mainData").getAsJsonArray("inventory");
-    GameState[] gameStates = new GameState[2]; //[0] is current [1] is at checkpoint
     gameStates[0] = new GameState(inventory);
     gameStates[1] = new GameState(inventory);
+    
+    
     //String gameTitle = metaData.get("title").getAsString();
 
     Scanner in = new Scanner(System.in);
     
     
-    Scene scene = new Scene (gameData, gameStates);
+    scene = new Scene (gameData, gameStates);
 
 
     int num = 0;
 
-    String display = scene.makeInitialText();
+    display = scene.setScene("titleScreen");
 
 
 
@@ -38,8 +47,15 @@ public static void main(String[] args) throws IOException {
         System.out.println(display);
         num = in.nextInt();
 
-        if (num == 99) { System.out.println(gameStates[0].inventoryString()); }
-        else {
+        if (num == 99) { 
+            System.out.println(gameStates[0].inventoryString()); 
+        } else if (num == 55) { 
+            writeSave(); 
+            continue;
+        } else if (num == 77) { 
+            loadSave();
+            continue;
+         } else {
             display = scene.processChoice(num);
         }
 
@@ -66,6 +82,39 @@ public static void main(String[] args) throws IOException {
 
 
     }
+
+    static void writeSave() throws FileNotFoundException, IOException {
+        JsonObject statesToSave = new JsonObject();
+        JsonObject currentState = gameStates[0].dataToJson();
+        JsonObject checkpointState = gameStates[1].dataToJson();
+
+        FileOutputStream FOS = new FileOutputStream("Save.sav");
+        PrintWriter printer = new PrintWriter(FOS);
+
+        statesToSave.add("currentState", currentState);
+        statesToSave.add("checkpointState", checkpointState);
+
+        printer.println(statesToSave.toString());
+
+        printer.close();
+        FOS.close();
+
+    }
+
+    static void loadSave() throws FileNotFoundException, IOException {
+        FileReader saveFile = new FileReader("save.sav");
+        JsonObject loadedData = JsonParser.parseReader(saveFile).getAsJsonObject();
+
+        JsonObject currentState = loadedData.get("currentState").getAsJsonObject();
+        JsonObject checkpointState = loadedData.get("checkpointState").getAsJsonObject();
+
+        gameStates[0].restoreState(currentState);
+        gameStates[1].restoreState(checkpointState);
+
+        display = scene.setScene(gameStates[0].getLabel());
+    }
+
+
         
         
 }

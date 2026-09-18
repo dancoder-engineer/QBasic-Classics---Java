@@ -62,7 +62,7 @@ public class Scene {
         commandNum = 0;
         outputText = "";
         outputText += makeText() + "\n" + makeOptions();
-        processCommands(true);
+        processCommands(false);
         return outputText;
     }
 
@@ -138,20 +138,14 @@ public class Scene {
                 gameStates[0].updateCheckpoint(gameStates[1]);
                 break;
             case "Variable Math":
-                if (doMath) {
-                    gameStates[0].variableMath(cmdArray.get(1).getAsString());
-                    break;
-                }
+                if (doMath) { gameStates[0].variableMath(cmdArray.get(1).getAsString());}
+                break;
             case "Give Item":
-                if (doMath) {
-                    gameStates[0].giveItem(cmdArray.get(1).getAsInt());
-                    break;
-                }
+                if (doMath) { gameStates[0].giveItem(cmdArray.get(1).getAsInt()); }
+                break;
             case "Remove Item":
-                if (doMath) {
-                    gameStates[0].removeItem(cmdArray.get(1).getAsInt());
-                    break;
-                }
+                if (doMath) { gameStates[0].removeItem(cmdArray.get(1).getAsInt()); }
+                break;
             case "Add Label If": 
                 if(gameStates[0].ifCondition(cmdArray.get(1).getAsString())) { 
                     outputText += (commandNum + 1) + ". " + cmdArray.get(2).getAsString() + "\n";

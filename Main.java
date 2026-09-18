@@ -108,8 +108,14 @@ public static void main(String[] args) throws IOException {
         JsonObject currentState = loadedData.get("currentState").getAsJsonObject();
         JsonObject checkpointState = loadedData.get("checkpointState").getAsJsonObject();
 
+        saveFile.close();
+
         gameStates[0].restoreState(currentState);
         gameStates[1].restoreState(checkpointState);
+
+        if (!gameStates[0].getMusic().isEmpty()) {
+            scene.playSong(gameStates[0].getMusic());
+        }
 
         display = scene.setScene(gameStates[0].getLabel());
     }
